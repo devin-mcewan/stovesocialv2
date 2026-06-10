@@ -9,8 +9,7 @@ WebBrowser.maybeCompleteAuthSession();
 const SignInScreen = () => {
   const handleGoogleSignIn = async () => {
     try {
-      const redirectUrl =
-        "https://bnbp9ly-devdevindev-8081.exp.direct/--/auth/callback";
+      const redirectUrl = "stovesocial://auth/callback";
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
@@ -28,15 +27,26 @@ const SignInScreen = () => {
           redirectUrl,
         );
 
-        Alert.alert(
-          "Result",
-          `Type: ${result.type}\nURL: ${result.url || "none"}`,
-        );
-
         if (result.type === "success" && result.url) {
-          const { error: sessionError } =
-            await supabase.auth.exchangeCodeForSession(result.url);
-          if (sessionError) Alert.alert("Session Error", sessionError.message);
+          // Parse the URL and extract tokens directly
+          const url = new URL(result.url);
+          const access_token =
+            url.searchParams.get("access_token") ||
+            new URLSearchParams(url.hash.slice(1)).get("access_token");
+          const refresh_token =
+            url.searchParams.get("refresh_token") ||
+            new URLSearchParams(url.hash.slice(1)).get("refresh_token");
+
+          if (access_token) {
+            const { error: sessionError } = await supabase.auth.setSession({
+              access_token,
+              refresh_token,
+            });
+            if (sessionError)
+              Alert.alert("Session Error", sessionError.message);
+          } else {
+            Alert.alert("URL received", result.url);
+          }
         }
       }
     } catch (error) {

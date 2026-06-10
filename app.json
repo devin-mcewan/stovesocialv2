@@ -17,15 +17,21 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.devdevin.dev.StoveSocialV2",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#faf8f4"
       },
       "edgeToEdgeEnabled": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-web-browser"]
+    "plugins": ["expo-web-browser"],
+    "extra": {
+      "eas": {
+        "projectId": "a043d3da-58a1-470e-9eb8-b9a673a55523"
+      }
+    }
   }
 }
