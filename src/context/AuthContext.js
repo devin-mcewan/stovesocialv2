@@ -17,10 +17,35 @@ export const AuthProvider = ({ children }) => {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+
+      if (session?.user) {
+        const { id, email, user_metadata } = session.user;
+
+        console.log("User signed in:", email);
+        console.log("User metadata:", user_metadata);
+
+        const { data, error } = await supabase.from("users").upsert(
+          {
+            id,
+            email,
+            display_name: user_metadata?.full_name ?? null,
+            avatar_url: user_metadata?.avatar_url ?? null,
+          },
+          {
+            onConflict: "id",
+          },
+        );
+
+        if (error) {
+          console.log("Upsert error:", error.message);
+        } else {
+          console.log("User saved successfully:", data);
+        }
+      }
     });
 
     return () => subscription.unsubscribe();
