@@ -4,24 +4,38 @@ const RecipeCard = ({ recipe }) => {
   return (
     <View style={styles.card}>
       <Image source={{ uri: recipe.image_url }} style={styles.image} />
-      <Text style={styles.title}>{recipe.title}</Text>
-      <Text style={styles.info}>{recipe.author_id}</Text>
-      <TouchableOpacity
-        onPress={() => console.log("Liked recipe: ", recipe.id)}
-      >
-        <Text>🧡</Text>
-      </TouchableOpacity>
+      <Text style={styles.primaryText}>{recipe.title}</Text>
+      <View style={styles.cardFooter}>
+        <Text style={styles.secondaryText}>By Chef:</Text>
+        <TouchableOpacity
+          onPress={() => console.log("Liked recipe: ", recipe.id)}
+        >
+          <Text style={styles.accent}>🧡</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#fff", //  rewrite to use friendlier background color using the theme of the app design
+    backgroundColor: "#ffffff",
     borderRadius: 10,
     padding: 15,
     marginBottom: 20,
     alignItems: "center",
     justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  cardFooter: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
+    width: "100%",
+    marginTop: 8,
   },
   image: {
     width: "100%",
@@ -29,14 +43,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
   },
-  title: {
+  primaryText: {
+    color: "#1a1a18",
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 5,
   },
-  info: {
+  secondaryText: {
     fontSize: 14,
-    color: "#666",
+    color: "#6b6b63",
+  },
+  accent: {
+    color: "#c8490a",
   },
 });
 export default RecipeCard;
