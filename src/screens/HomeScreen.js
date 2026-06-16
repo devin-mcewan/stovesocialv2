@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { supabase } from "../supabase";
 import RecipeCard from "../components/RecipeCard";
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -10,7 +10,7 @@ const HomeScreen = () => {
     const fetchRecipes = async () => {
       const { data, error } = await supabase
         .from("recipes")
-        .select("*")
+        .select("*, users(display_name, avatar_url)")
         .order("created_at", { ascending: false });
 
       console.log("Recipes data:", data);
@@ -38,7 +38,9 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <FlatList
         data={recipes}
-        renderItem={({ item }) => <RecipeCard recipe={item} />}
+        renderItem={({ item }) => (
+          <RecipeCard recipe={item} navigation={navigation} />
+        )}
         keyExtractor={(item) => item.id.toString()}
       />
     </View>
@@ -49,8 +51,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#faf8f4",
-    paddingHorizontal: 16,
-    paddingTop: 16,
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
 });
 export default HomeScreen;
