@@ -73,10 +73,17 @@ const RecipeDetailScreen = () => {
       <Text style={styles.title}>{recipe.title}</Text>
       <Text style={styles.description}>{recipe.description}</Text>
       <Text style={styles.description}>{recipe.servings} servings</Text>
-      <Text style={styles.description}>{recipe.prep_time} minutes prep</Text>
-      <Text style={styles.description}>{recipe.cook_time} minutes cook</Text>
       <Text style={styles.description}>
-        {recipe.prep_time + recipe.cook_time} minutes total
+        {recipe?.prep_time || 0} minutes prep
+      </Text>
+      <Text style={styles.description}>
+        {recipe?.cook_time || 0} minutes cook
+      </Text>
+      <Text style={styles.description}>
+        {recipe?.prep_time && recipe?.cook_time
+          ? recipe.prep_time + recipe.cook_time
+          : 0}{" "}
+        minutes total
       </Text>
       <Text style={styles.sectionTitle}>Ingredients</Text>
       <View>
