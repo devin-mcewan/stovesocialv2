@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { supabase } from "../supabase";
 import RecipeCard from "../components/RecipeCard";
@@ -6,25 +7,23 @@ const HomeScreen = ({ navigation }) => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchRecipes = async () => {
-      const { data, error } = await supabase
-        .from("recipes")
-        .select("*, users(display_name, avatar_url)")
-        .order("created_at", { ascending: false });
-
-      console.log("Recipes data:", data);
-      console.log("Recipes error:", error);
-
-      if (error) {
-        console.error("Error fetching recipes:", error);
-      } else {
-        setRecipes(data);
-      }
-      setLoading(false);
-    };
-    fetchRecipes();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchRecipes = async () => {
+        const { data, error } = await supabase
+          .from("recipes")
+          .select("*, users(display_name, avatar_url)")
+          .order("created_at", { ascending: false });
+        if (error) {
+          console.error("Error fetching recipes:", error);
+        } else {
+          setRecipes(data);
+        }
+        setLoading(false);
+      };
+      fetchRecipes();
+    }, [setRecipes]),
+  );
 
   if (loading) {
     return (
