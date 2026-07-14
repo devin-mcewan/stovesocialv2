@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   View,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -124,7 +125,7 @@ const AddRecipeScreen = () => {
   };
 
   return (
-    <View>
+    <ScrollView>
       <Text>+ Recipe</Text>
       <Text>Title</Text>
       <TextInput value={title} placeholder="Title..." onChangeText={setTitle} />
@@ -200,7 +201,7 @@ const AddRecipeScreen = () => {
         <Text>Submit Recipe</Text>
       </TouchableOpacity>
       {/* Image Upload Section */}
-    </View>
+    </ScrollView>
   );
 };
 
