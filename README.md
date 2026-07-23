@@ -42,3 +42,54 @@ Without a navigation library, moving between screens in React Native would mean 
 ---
 
 _README in progress — Architecture/How It Works and setup instructions coming next._
+
+## Architecture / How It Works
+
+**Sign In:**
+Users are prompted to sign in with Google. Using Google's OAuth API, Google handles authentication and hands back an authorized user token with the user's information. That information is passed to Supabase to store our own record of the user. This user is stored in context for later reference as `session.user`. After sign-in, the user lands on the Home screen: a global feed of recipes from every user, joined with author data (display name, avatar), sorted newest first.
+
+**Creating a Recipe:**
+A user enters a recipe title, then adds ingredient rows (name, amount, unit) and instruction rows (step number, description) using dynamic, repeatable form sections — each backed by an array of objects in state, which allows adding, editing, and removing individual rows. On submit, `postRecipe` runs: the title is validated (ingredients and instructions are not currently validated), then a new row is inserted into the `recipes` table with the title and `author_id` set to the signed-in user's ID. The newly created recipe's ID is captured from the response. The ingredient and instruction state arrays are each mapped into new arrays with that `recipe_id` attached, then inserted into their respective tables. On success, form state resets and the user is alerted.
+
+**Viewing a Recipe's Detail:**
+Tapping a recipe card navigates to `RecipeDetailScreen`, passing the recipe's ID via route params. The screen fetches the recipe, its ingredients, and its instructions using that ID, with loading and not-found states handled separately. Once loaded, the screen renders the recipe's information in a scroll view, mapping over the ingredients and instructions arrays to render each as a text row, keyed by each item's database ID.
+
+---
+
+_README in progress — setup instructions coming next._
+
+## Setup Instructions
+
+1. Clone the repository:
+
+   ```
+   git clone https://github.com/devin-mcewan/stovesocialv2.git
+   cd stovesocialv2
+   ```
+
+2. Install dependencies:
+
+   ```
+   npm install
+   ```
+
+3. Create a `.env` file in the project root, copying the format from `.env.example`:
+
+   ```
+   EXPO_PUBLIC_SUPABASE_URL=your-supabase-project-url
+   EXPO_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+   ```
+
+   These values are available in your Supabase project dashboard under Project Settings > API. This project uses Supabase for its database, authentication, and backend — you'll need your own Supabase project to run a working copy.
+
+4. Google OAuth requires its own registered credentials in Google Cloud Console, tied to a redirect URI and package name. This step currently requires manual setup — reach out to the repo owner for guidance.
+
+5. Run the app:
+   ```
+   npx expo start
+   ```
+   Scan the QR code with Expo Go (Android) or the Camera app (iOS) to run on a physical device, or press `a` to launch on an Android emulator via an EAS Dev Build.
+
+---
+
+_README complete — title, features, tech stack with rationale, architecture, and setup instructions._
